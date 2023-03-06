@@ -16,7 +16,7 @@ export default defineComponent({
         LayoutDefault,
         ListCharacter,
     },
-    setup() {
+    data() {
         return {
             request_url: "",
             title: "",
@@ -76,14 +76,12 @@ export default defineComponent({
         },
     },
     created() {
-        if (process.browser) {
-            const search_query = location.search;
-            if (search_query.trim() === "") {
-                this.sem_param();
-            } else {
-                this.request_url = `https://rickandmortyapi.com/api/character/${search_query}`;
-                this.title_search(search_query);
-            }
+        const search_query = location.search;
+        if (search_query.trim() === "") {
+            this.sem_param();
+        } else {
+            this.request_url = `https://rickandmortyapi.com/api/character/${search_query}`;
+            this.title_search(search_query);
         }
     },
 });
