@@ -1,7 +1,7 @@
 <template>
     <div>
         <HeaderComponent />
-        <main>
+        <main class="container">
             <section class="page-section">
                 <slot />
             </section>

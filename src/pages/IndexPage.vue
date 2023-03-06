@@ -1,12 +1,11 @@
 <template>
     <LayoutDefault>
-        <q-page class="flex flex-center">
-            <img
-                alt="Quasar logo"
-                src="~assets/quasar-logo-vertical.svg"
-                style="width: 200px; height: 200px"
-            />
-        </q-page>
+        <SearchForm />
+
+        <ListCharacter
+            title="Lista de personagens"
+            :request_url="request_url"
+        />
     </LayoutDefault>
 </template>
 
@@ -14,11 +13,20 @@
 import { defineComponent } from "vue";
 
 import LayoutDefault from "components/Layouts/LayoutDefault.vue";
+import SearchForm from "components/SearchForm.vue";
+import ListCharacter from "components/ListCharacter/ListCharacter.vue";
 
 export default defineComponent({
     name: "IndexPage",
     components: {
         LayoutDefault,
+        SearchForm,
+        ListCharacter,
+    },
+    setup() {
+        return {
+            request_url: "https://rickandmortyapi.com/api/character",
+        };
     },
 });
 </script>
