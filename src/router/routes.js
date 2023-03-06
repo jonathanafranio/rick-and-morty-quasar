@@ -2,15 +2,16 @@ const routes = [
     {
         path: "/",
         component: () => import("pages/IndexPage.vue"),
-        //component: () => import('layouts/MainLayout.vue'),
-        //children: [
-        //  { path: '', component: () => import('pages/IndexPage.vue') }
-        //]
     },
 
     {
         path: "/search",
         component: () => import("pages/Search.vue"),
+    },
+
+    {
+        path: "/personagem/:personagem",
+        component: () => import("pages/Personagem.vue"),
     },
 
     // Always leave this as last one,
