@@ -44,16 +44,30 @@ export default {
     },
     props: {
         title: String,
-        request_url: {
+        filtro_status: {
             type: String,
             default() {
-                return "https://rickandmortyapi.com/api/character";
+                return "";
+            },
+        },
+        filtro_gender: {
+            type: String,
+            default() {
+                return "";
+            },
+        },
+        filtro_name: {
+            type: String,
+            default() {
+                return "";
             },
         },
     },
     data() {
         return {
+            request_url: "https://rickandmortyapi.com/graphql",
             characters: [],
+            page: 1,
             pagination: {
                 next: null,
                 prev: null,
@@ -63,17 +77,22 @@ export default {
         };
     },
     methods: {
-        get_character(url) {
-            if (!url) return;
-            fetch(url)
+        async get_character(query, variables = {}) {
+            const option = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query, variables }),
+            };
+            await fetch(this.request_url, option)
                 .then((r) => r.json())
                 .then((res) => {
-                    const { results, info } = res;
+                    const { results, info } = res.data.characters;
                     this.pagination.next = info.next;
                     this.pagination.prev = info.prev;
                     this.characters.push(results);
-
                     this.loading = false;
+
+                    console.log({ results, info });
                 })
                 .catch((e) => {
                     this.loading = false;
@@ -84,11 +103,36 @@ export default {
             if (!this.pagination.next) return;
             this.loading = true;
 
-            this.get_character(this.pagination.next);
+            this.page = this.pagination.next;
+        },
+    },
+    watch: {
+        page() {
+            this.get_character(this.queryGraphql);
+        },
+    },
+    computed: {
+        queryGraphql() {
+            return `{\n
+                characters(page: ${this.page}, filter: {status: \"${this.filtro_status}\" gender: \"${this.filtro_gender}\" name: \"${this.filtro_name}\"}) {\n
+                    info {\n
+                        pages\n
+                        count\n
+                        next\n
+                        prev\n
+                    }\n
+                    results {\n
+                        id\n
+                        name\n
+                        species\n
+                        image\n
+                    }\n
+                }\n
+            }`;
         },
     },
     created() {
-        this.get_character(this.request_url);
+        this.get_character(this.queryGraphql);
     },
 };
 </script>
