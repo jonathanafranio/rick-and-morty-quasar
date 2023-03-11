@@ -21,10 +21,14 @@
             />
         </div>
 
-        <PaginationNext
-            v-if="pagination.next && !loading"
-            :load="loading"
-            v-on:next-page="next_page"
+        <Pagination
+            v-if="!loading && pagination.last > 1"
+            :next="pagination.next"
+            :prev="pagination.prev"
+            :active="page"
+            :last="pagination.last"
+            :prefix_url="page_url"
+            :search="search"
         />
 
         <Preload v-if="loading" />
@@ -33,13 +37,13 @@
 
 <script>
 import CardCharacter from "./CardCharacter.vue";
-import PaginationNext from "../PaginationNext.vue";
+import Pagination from "../Pagination.vue";
 import Preload from "../Preload";
 export default {
     name: "ListCharacter",
     components: {
         CardCharacter,
-        PaginationNext,
+        Pagination,
         Preload,
     },
     props: {
@@ -62,15 +66,28 @@ export default {
                 return "";
             },
         },
+        page: {
+            type: Number,
+            default() {
+                return 1;
+            },
+        },
+        search: {
+            type: String,
+            default() {
+                return "";
+            },
+        },
+        page_url: String,
     },
     data() {
         return {
             request_url: "https://rickandmortyapi.com/graphql",
             characters: [],
-            page: 1,
             pagination: {
                 next: null,
                 prev: null,
+                last: null,
             },
             loading: true,
             error: false,
@@ -89,6 +106,7 @@ export default {
                     const { results, info } = res.data.characters;
                     this.pagination.next = info.next;
                     this.pagination.prev = info.prev;
+                    this.pagination.last = info.pages;
                     this.characters.push(results);
                     this.loading = false;
 
@@ -98,12 +116,6 @@ export default {
                     this.loading = false;
                     this.error = true;
                 });
-        },
-        next_page() {
-            if (!this.pagination.next) return;
-            this.loading = true;
-
-            this.page = this.pagination.next;
         },
     },
     watch: {

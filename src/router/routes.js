@@ -5,8 +5,18 @@ const routes = [
     },
 
     {
+        path: "/p/:p",
+        component: () => import("pages/IndexPaginacao.vue"),
+    },
+
+    {
         path: "/search",
         component: () => import("pages/Search.vue"),
+    },
+
+    {
+        path: "/search/p/:p",
+        component: () => import("pages/SearchPaginacao.vue"),
     },
 
     {

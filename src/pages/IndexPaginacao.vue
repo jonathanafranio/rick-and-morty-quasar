@@ -3,7 +3,8 @@
         <SearchForm />
 
         <ListCharacter
-            title="Lista de personagens"
+            :title="title"
+            :page="page"
             :page_url="prefix_url"
             search=""
         />
@@ -18,11 +19,17 @@ import SearchForm from "components/SearchForm.vue";
 import ListCharacter from "components/ListCharacter/ListCharacter.vue";
 
 export default defineComponent({
-    name: "IndexPage",
+    name: "IndexPaginacao",
     components: {
         LayoutDefault,
         SearchForm,
         ListCharacter,
+    },
+    data() {
+        return {
+            title: `Lista de personagens - página: ${this.$route.params.p}`,
+            page: this.$route.params.p,
+        };
     },
     computed: {
         prefix_url() {
